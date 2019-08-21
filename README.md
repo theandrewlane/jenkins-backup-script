@@ -17,39 +17,34 @@ Archive Jenkins settings and plugins
 ./jenkins-backup.sh /path/to/jenkins_home backup_`date +"%Y%m%d%H%M%S"`.tar.gz
 ```
 
-# run with Jenkins Job
-## 1. install Exclusive Execution Plugin
-https://wiki.jenkins-ci.org/display/JENKINS/Exclusive+Execution+Plugin
+## Configure Jenkins Job
+### 1. Create new Freestyle Project
 
-## 2. New Job
-![img](http://cdn-ak.f.st-hatena.com/images/fotolife/s/sue445/20131208/20131208001948.png)
-
-## 3. Configure
-### Source Code Management > Repository URL
+### 2. Configure Project
+#### Source Code Management > Repository URL
 ```
 https://github.com/theandrewlane/jenkins-backup-script.git
 ```
 
-### Build Triggers > Build periodically
-
-### Build Environment > Set exclusive Execution
-
-### Build > Execute shell
-ex.
-
-```bash
-./jenkins-backup.sh $JENKINS_HOME /path/to/backup_`date +"%Y%m%d%H%M%S"`.tar.gz
+#### Build periodically (Build Triggers > Build periodically) build daily at 3AM:
+```
+H 3 * * *
 ```
 
-# Tips
-## rotate backup files
+#### Build Step - Execute Shell (Run backup script)
+
+```bash
+./jenkins-backup.sh $JENKINS_HOME /path/to/backups_`date +"%Y%m%d%H%M%S"`.tar.gz
+```
+
+## Tips
+### Rotate backup files
 ```bash
 # keep backup with latest 30 days
 find /path/to/backup_* -mtime +30 -delete
 ```
 
-## Restore commands
-example
+### Restore commands
 
 ```bash
 sudo /etc/init.d/jenkins stop
